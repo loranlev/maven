@@ -21,9 +21,36 @@ public class VilleBloImpl implements VilleBLO{
 		return listeville;
 	}
 	
-	public void ajouterVille(String codePostal, String codeCommune, String nomCommune, String libelle, String ligne, String longitude, String latitude) {
+	public void creerVille(Ville ville) {
+		villeDao.setVille(ville);
+	}
+	
+	public Ville getNCVille(String nomCommune) {
+		Ville villeNC;
+		villeNC=villeDao.getNCVille(nomCommune);
 		
-		villeDao.ajouterVille( codePostal,  codeCommune,  nomCommune,  libelle,  ligne,  longitude,  latitude);
+		return villeNC;
+	}
+
+	public Ville getCCVille(String codeCommune) {
+		Ville villeCC;
+		villeCC=villeDao.getCCVille(codeCommune);
+		
+		return villeCC;
+	}
+	
+	public boolean modifierVille(Ville ville) {
+		boolean resultat;
+		
+		resultat=villeDao.modifierVille(ville);
+		return resultat;
+	}
+	
+	public boolean supprimerVille(String codeCommune) {
+		boolean resultat;
+		
+		resultat=villeDao.supprimerVille(codeCommune);
+		return resultat;
 	}
 
 }

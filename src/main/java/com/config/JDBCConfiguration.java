@@ -6,22 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.context.annotation.Bean;
+
 public class JDBCConfiguration {
-	public static Connection getConnection() {
-		Connection con=null;
-	try {
-		con = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/ville_france", "root","");
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("select * from ville_france");
-		while (rs.next()) {
-			System.out.println(rs.getString(2));
+	@Bean
+	public static Connection getConnexionBDD() {
+		String url = "jdbc:mysql://localhost:3306/ville_france";
+		String user = "root";
+		String passwd = "";
+		Connection conn = null;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(url, user, passwd);
+			System.out.println("Connecter");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Erreur");
+			System.exit(0);
 		}
-		System.out.println("Connecté");
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-	
-	return con;
+		return conn;
 	}
 }

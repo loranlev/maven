@@ -8,5 +8,15 @@ public interface VilleDAO {
 
 	public ArrayList<Ville> getInfoVille();
 	
-	public void ajouterVille(String codePostal, String codeCommune, String nomCommune, String libelle, String ligne, String longitude, String latitude);
+	public void setVille(Ville ville);
+	
+	public Ville getNCVille(String nomCommune);
+	
+	public Ville getCCVille(String codeCommune);
+	
+	public boolean modifierVille(Ville ville);
+	
+	public boolean supprimerVille(String codeCommune);
+
+	
 }

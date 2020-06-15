@@ -1,7 +1,6 @@
 package com.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,57 +12,138 @@ import com.config.JDBCConfiguration;
 import com.dto.Ville;
 
 @Repository
-public class VilleDAOImpl implements VilleDAO{
-	
+public class VilleDAOImpl implements VilleDAO {
 	public ArrayList<Ville> getInfoVille() {
-		
-		ArrayList<Ville> listeville=new ArrayList<Ville>();
-		
-		Connection con = JDBCConfiguration.getConnection();
-		ResultSet resultat = null;
-		String requete="SELECT * FROM ville_france";
-		
+		Ville ville = null;
+		ArrayList<Ville> villes = new ArrayList<Ville>();
+		Connection con = JDBCConfiguration.getConnexionBDD();
+
+		String requete = "SELECT * FROM ville_france";
+
 		try {
-			Statement stat = con.createStatement();
-			resultat = stat.executeQuery(requete);
-			
-			while(resultat.next()) {
-				Ville ville = new Ville();
-				ville.setCodePostal(resultat.getString("Code_postal"));
-				ville.setCodeComune(resultat.getString("Code_commune_INSEE"));
-				ville.setNomCommune(resultat.getString("Nom_commune"));
-				ville.setLibelle(resultat.getString("Libelle_acheminement"));
-				ville.setLigne(resultat.getString("Ligne_5"));
-				ville.setLongitude(resultat.getString("Latitude"));
-				ville.setLatitude(resultat.getString("Longitude"));
-				listeville.add(ville);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(requete);
+			while (rs.next()) {
+				ville = new Ville();
+				ville.setCodeComune(rs.getString(1));
+				ville.setCodePostal(rs.getString(3));
+				ville.setNomCommune(rs.getString(2));
+				ville.setLibelle(rs.getString(4));
+				ville.setLigne(rs.getString(5));
+
+				villes.add(ville);
 			}
-			
-		}catch(SQLException e) {
-			
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		
-		return listeville;
+		return villes;
+	}
+
+	@Override
+	public void setVille(Ville ville) {
+
+		try {
+			Connection con = JDBCConfiguration.getConnexionBDD();
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(
+					"Insert into ville_france(Code_commune_INSEE,Nom_commune,Libelle_acheminement,Ligne_5,Latitude,Code_postal,Longitude)"
+							+ " values(" + ville.getCodeComune() + ",'" + ville.getNomCommune() + "','"
+							+ ville.getLibelle() + "','" + ville.getLigne() + "'," + ville.getLatitude() + ","
+							+ ville.getCodePostal() + "," + ville.getLongitude() + ")");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	
-	public void ajouterVille(String codePostal, String codeCommune, String nomCommune, String libelle, String ligne, String longitude, String latitude) {
-					
-			Connection con = JDBCConfiguration.getConnection();
-			int resultat = 0;
-			String requete="INSERT INTO ville_france VALUES ("+codePostal+","+codeCommune+","+nomCommune+","+libelle+","+ligne+","+longitude+","+latitude+")";
-			
-			try {
-				Statement stat = con.createStatement();
-				resultat = stat.executeUpdate(requete);
-				
-				stat.close();
-				con.close();
-				
-			}catch(SQLException e) {
-				
+	@Override
+	public Ville getNCVille(String nomCommune) {
+		Ville ville = new Ville();
+		Connection con = JDBCConfiguration.getConnexionBDD();
+
+		String requete = "SELECT * FROM ville_france where Nom_commune=" +nomCommune;
+
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(requete);
+			while (rs.next()) {
+				ville.setCodeComune(rs.getString(1));
+				ville.setCodePostal(rs.getString(3));
+				ville.setNomCommune(rs.getString(2));
+				ville.setLibelle(rs.getString(4));
+				ville.setLigne(rs.getString(5));
+				ville.setLatitude(rs.getString(6));
+				ville.setLongitude(rs.getString(7));
 			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ville;
+	}
+	
+	@Override
+	public Ville getCCVille(String codeCommune) {
+		Ville ville = new Ville();
+		Connection con = JDBCConfiguration.getConnexionBDD();
+
+		String requete = "SELECT * FROM ville_france where Code_commune_INSEE=" +codeCommune;
+
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(requete);
+			while (rs.next()) {
+				ville.setCodeComune(rs.getString(1));
+				ville.setCodePostal(rs.getString(3));
+				ville.setNomCommune(rs.getString(2));
+				ville.setLibelle(rs.getString(4));
+				ville.setLigne(rs.getString(5));
+				ville.setLatitude(rs.getString(6));
+				ville.setLongitude(rs.getString(7));
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ville;
+	}
+	
+	public boolean modifierVille(Ville ville) {
+		boolean resultat;
+		
+		try {
+			Connection con = JDBCConfiguration.getConnexionBDD();
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(
+					"UPDATE `ville_france` SET `Code_commune_INSEE`='"+ville.getCodeComune()+"',`Nom_commune`="+ville.getNomCommune()+","
+							+ "`Code_postal`="+ville.getCodePostal()+",`Libelle_acheminement`='"+ville.getLibelle()+"',"
+									+ "`Ligne_5`="+ville.getLigne()+",`Latitude`="+ville.getLatitude()+",`Longitude`="+ville.getLongitude()+" WHERE `Code_commune_INSEE`="+ville.getCodeComune());
 			
+			resultat = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			resultat=false;
+			return resultat;
+		}
+		return resultat;
+	}
+	
+	public boolean supprimerVille(String codeCommune) {
+		boolean resultat;
+		
+		try {
+			Connection con = JDBCConfiguration.getConnexionBDD();
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(
+					"DELETE FROM ville_france WHERE Code_commune_INSEE="+codeCommune);
+			
+			resultat = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			resultat=false;
+			return resultat;
+		}
+		return resultat;
 	}
 
 }
