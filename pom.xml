@@ -75,8 +75,4 @@
 		</plugins>
 	</build>
 
-
-	<modules>
-		<module>TP_ESEO_Maven_Client</module>
-	</modules>
 </project>
