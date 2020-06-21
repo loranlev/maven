@@ -2,7 +2,7 @@ package com.dto;
 
 public class Ville {
 
-	private String codeComune;
+	private String codeCommune;
     private String nomCommune;
     private String codePostal;
     private String libelle;
@@ -11,11 +11,11 @@ public class Ville {
     private String longitude;
    
    
-    public String getCodeComune() {
-        return codeComune;
+    public String getCodeCommune() {
+        return codeCommune;
     }
     public void setCodeComune(String codeComune) {
-        this.codeComune = codeComune;
+        this.codeCommune = codeComune;
     }
     public String getNomCommune() {
         return nomCommune;

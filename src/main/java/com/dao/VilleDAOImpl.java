@@ -30,6 +30,8 @@ public class VilleDAOImpl implements VilleDAO {
 				ville.setNomCommune(rs.getString(2));
 				ville.setLibelle(rs.getString(4));
 				ville.setLigne(rs.getString(5));
+				ville.setLatitude(rs.getString(6));
+				ville.setLongitude(rs.getString(7));
 
 				villes.add(ville);
 			}
@@ -48,7 +50,7 @@ public class VilleDAOImpl implements VilleDAO {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(
 					"Insert into ville_france(Code_commune_INSEE,Nom_commune,Libelle_acheminement,Ligne_5,Latitude,Code_postal,Longitude)"
-							+ " values(" + ville.getCodeComune() + ",'" + ville.getNomCommune() + "','"
+							+ " values(" + ville.getCodeCommune() + ",'" + ville.getNomCommune() + "','"
 							+ ville.getLibelle() + "','" + ville.getLigne() + "'," + ville.getLatitude() + ","
 							+ ville.getCodePostal() + "," + ville.getLongitude() + ")");
 		} catch (SQLException e) {
@@ -115,9 +117,9 @@ public class VilleDAOImpl implements VilleDAO {
 			Connection con = JDBCConfiguration.getConnexionBDD();
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(
-					"UPDATE `ville_france` SET `Code_commune_INSEE`='"+ville.getCodeComune()+"',`Nom_commune`="+ville.getNomCommune()+","
-							+ "`Code_postal`="+ville.getCodePostal()+",`Libelle_acheminement`='"+ville.getLibelle()+"',"
-									+ "`Ligne_5`="+ville.getLigne()+",`Latitude`="+ville.getLatitude()+",`Longitude`="+ville.getLongitude()+" WHERE `Code_commune_INSEE`="+ville.getCodeComune());
+					"UPDATE ville_france SET Code_postal='"+ville.getCodePostal()+"',Nom_commune='"+ville.getNomCommune()+"',Libelle_acheminement='"+ville.getLibelle()+
+					"',Code_commune_INSEE='"+ville.getCodeCommune()+"',Ligne_5='"+ville.getLigne()+"',Longitude='"+ville.getLongitude()+"',Latitude='"+ville.getLatitude()+
+					"' WHERE Code_commune_INSEE='"+ville.getCodeCommune()+"'");
 			
 			resultat = true;
 		} catch (SQLException e) {
